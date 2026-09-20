@@ -251,12 +251,16 @@ safesphere/
 ├── 📄 .env.example                   # Environment template
 ├── 📄 start.bat                      # Quick start (Windows)
 ├── 📄 README.md                      # This file
-├── 📄 ARCHITECTURE.md                # Detailed architecture
-├── 📄 SETUP_GUIDE.md                 # Setup instructions
-├── 📄 DATABASE_SETUP.md              # Database config
-├── 📄 CERTIFICATE_FEATURE.md         # Certificate docs
-├── 📄 MAP_EMERGENCY_LOCATIONS.md     # Map feature docs
-├── 📄 CONTRIBUTING.md                # Contribution guide
+├── 📁 docs/                          # Additional documentation
+│   ├── ARCHITECTURE.md               # Detailed architecture
+│   ├── SETUP_GUIDE.md                # Setup instructions
+│   ├── DATABASE_SETUP.md             # Database config
+│   ├── CERTIFICATE_FEATURE.md        # Certificate docs
+│   ├── MAP_EMERGENCY_LOCATIONS.md    # Map feature docs
+│   ├── GEMINI_API_SETUP.md           # Gemini AI setup
+│   ├── GOOGLE_MAPS_INTEGRATION.md    # Google Maps setup
+│   ├── MOBILE_NAVIGATION_IMPLEMENTATION.md # Mobile nav docs
+│   └── CONTRIBUTING.md               # Contribution guide
 │
 ├── 📁 safespera/                     # Project config
 │   ├── settings.py                   # Django settings
@@ -320,7 +324,7 @@ safesphere/
 ## 📚 Features Documentation
 
 ### 1. AI Assistant (Gemini 2.5 Flash)
-**File**: `CERTIFICATE_FEATURE.md` (Section: AI Integration)
+**File**: `docs/CERTIFICATE_FEATURE.md` (Section: AI Integration)
 
 - Location-aware responses (Sage University, Bhopal)
 - Real-time heatwave alerts (43-45°C)
@@ -340,7 +344,7 @@ AI: "Current temperature: 43-45°C (extremely hot). HEATWAVE ALERT..."
 ```
 
 ### 2. Emergency Map with Real-Time Locations
-**File**: `MAP_EMERGENCY_LOCATIONS.md`
+**File**: `docs/MAP_EMERGENCY_LOCATIONS.md`
 
 - 15+ hospitals across Madhya Pradesh
 - 8+ community centers/emergency shelters
@@ -357,7 +361,7 @@ AI: "Current temperature: 43-45°C (extremely hot). HEATWAVE ALERT..."
 - Works offline (cached tiles)
 
 ### 3. Certificate Generation System
-**File**: `CERTIFICATE_FEATURE.md`
+**File**: `docs/CERTIFICATE_FEATURE.md`
 
 - Automatic generation on course completion
 - Unique certificate IDs (DSA-2026-XXXX)
@@ -386,7 +390,7 @@ AI: "Current temperature: 43-45°C (extremely hot). HEATWAVE ALERT..."
 - Print-friendly formats
 
 ### 5. Mobile Navigation
-**File**: `MOBILE_NAVIGATION_IMPLEMENTATION.md`
+**File**: `docs/MOBILE_NAVIGATION_IMPLEMENTATION.md`
 
 - Hamburger menu (☰) for mobile
 - Slide-in sidebar animation
@@ -521,7 +525,7 @@ coverage report
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 
 ### Development Workflow
 
