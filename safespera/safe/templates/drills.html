@@ -1,0 +1,479 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeSphere - Emergency Drills</title>
+    <meta name="description" content="Practice emergency response through realistic drills">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modern-backgrounds.css' %}">
+    <script src="script.js" defer></script>
+</head>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    {
+      pageLanguage: 'en',
+      includedLanguages: 'en,hi,ta,te,bn,gu,kn,ml,mr,pa,ur',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    },
+    'google_translate_element'
+  );
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- GLOBAL BACKGROUND (place immediately after <body>) -->
+<div class="site-bg" aria-hidden="true" role="presentation">
+  <!-- preload hint (optional) -->
+  <link rel="preload" href="{% static 'bg/ar_boy.mp4' %}" as="video" type="video/mp4">
+
+  <video class="site-bg-video"
+         autoplay
+         muted
+         loop
+         playsinline
+         preload="metadata"
+         poster="{% static 'bg/site-bg.png' %}"
+         aria-hidden="true"
+         tabindex="-1">
+    <source src="{% static 'bg/ar_boy.mp4' %}" type="video/mp4">
+    <!-- fallback image for very old browsers -->
+  </video>
+
+  <div class="site-bg-overlay" aria-hidden="true" role="presentation"></div>
+</div>
+
+
+    <!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <span class="logo-icon">🛡️</span>
+            <span class="logo-text">SafeSphere</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            <span class="toggle-icon">☰</span>
+        </button>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="{% url 'learn' %}" class="nav-link {% if request.resolver_match.url_name == 'learn' %}active{% endif %}">
+            <span class="nav-icon">📚</span>
+            <span class="nav-text">Learn</span>
+        </a>
+             <a href="{% url 'protect' %}" class="nav-link {% if request.resolver_match.url_name == 'protect' %}active{% endif %}">
+            <span class="nav-icon">🏡</span>
+            <span class="nav-text">Protect Home, Farm & Livelihood</span>
+        </a>
+        
+        <a href="{% url 'games' %}" class="nav-link {% if request.resolver_match.url_name == 'games' %}active{% endif %}">
+            <span class="nav-icon">🎮</span>
+            <span class="nav-text">Games</span>
+        </a>
+        <a href="{% url 'drills' %}" class="nav-link {% if request.resolver_match.url_name == 'drills' %}active{% endif %}">
+            <span class="nav-icon">🚨</span>
+            <span class="nav-text">Drills</span>
+        </a>
+        
+        <a href="{% url 'emergency' %}" class="nav-link emergency-link {% if request.resolver_match.url_name == 'emergency' %}active{% endif %}">
+            <span class="nav-icon">🆘</span>
+            <span class="nav-text">Emergency</span>
+        </a>
+        <a href="{% url 'chat' %}" class="nav-link {% if request.resolver_match.url_name == 'chat' %}active{% endif %}">
+            <span class="nav-icon">💬</span>
+            <span class="nav-text">AI Assistant</span>
+        </a>
+        
+        <!-- Weather page -->
+        <a href="{% url 'weather' %}" class="nav-link {% if request.resolver_match.url_name == 'weather' %}active{% endif %}">
+            <span class="nav-icon">🌦</span>
+            <span class="nav-text">Weather</span>
+        </a>
+        <!-- Map page -->
+        <a href="{% url 'map' %}" class="nav-link {% if request.resolver_match.url_name == 'map' %}active{% endif %}">
+            <span class="nav-icon">🗺️</span>
+            <span class="nav-text">Safety Map</span>
+        </a>
+        <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">Profile</span>
+        </a>
+
+
+
+
+    </nav>
+</aside>
+          
+
+ 
+            
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="page-header">
+            <div id="google_translate_element"  class="lang-fixed"></div>
+            <div class="header-content">
+                <h1 class="page-title">Emergency Drills 🚨</h1>
+                <p class="page-subtitle">Practice realistic emergency scenarios to build muscle memory</p>
+            </div>
+        </header>
+
+        <!-- Active Drill Timer -->
+        <div id="drillTimer" class="drill-timer" style="display: none;">
+            <div class="timer-content">
+                <h3 class="timer-title">Drill In Progress</h3>
+                <div class="timer-display" id="timerDisplay">05:00</div>
+                <div class="timer-controls">
+                    <button class="btn btn-ghost" onclick="pauseDrill()">⏸️ Pause</button>
+                    <button class="btn btn-danger" onclick="stopDrill()">⏹️ Stop</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= SIMULATION DRILLS (NEW & CORRECT PLACE) ================= -->
+<section class="section">
+    <h2 style="margin-bottom:16px;">🎮 Interactive Simulation Drills</h2>
+
+    <div class="drills-grid">
+
+        <!-- Flood Simulation -->
+        <div class="drill-card">
+            <span class="drill-icon">🌊</span>
+            <h3 class="drill-title">Flood Preparedness Simulation</h3>
+            <p class="drill-description">
+                Build levees, shelters and protect population as flood spreads dynamically.
+            </p>
+            <a href="{% url 'drills_simulation' %}" class="btn btn-primary">
+                Start Flood Simulation →
+            </a>
+        </div>
+
+        <!-- Wildfire Simulation -->
+        <div class="drill-card">
+            <span class="drill-icon">🔥</span>
+            <h3 class="drill-title">Wildfire Survival Simulation</h3>
+            <p class="drill-description">
+                Manage dry land, plant trees, create firebreaks and save lives from spreading fire.
+            </p>
+            <a href="{% url 'wildfire_simulation' %}" class="btn btn-danger">
+                Start Wildfire Simulation →
+            </a>
+        </div>
+        <!-- Cyclone Simulation -->
+        <div class="drill-card">
+            <span class="drill-icon">🌀</span>
+            <h3 class="drill-title">Cyclone Preparedness Simulation</h3>
+            <p class="drill-description">
+            Experience strong winds, storm surge, and rainfall. Choose safe zones, build shelters,
+             and survive a powerful cyclone.    </p>
+            <a href="{% url 'cyclone_simulation' %}" class="btn btn-warning">
+            Start Cyclone Simulation →
+         </a>
+        </div>
+
+        <!-- AR Safety Drill -->
+         <div class="drill-card">
+            <span class="drill-icon">🕶️</span>
+            <h3 class="drill-title">Augmented Reality (AR) Safety Drills</h3>
+            <p class="drill-description">
+             Use your mobile device to practice emergency responses in Augmented Reality.
+             Scan markers to view 3D safety equipment and follow interactive instructions.
+            </p>
+            <a href="{% static 'ar/index.html' %}" class="btn btn-secondary" 
+             target="_blank" 
+             rel="noopener">
+             Start AR Safety Drills →
+            </a>
+        </div>
+
+        <div class="drill-card">
+         <span class="drill-icon">🎥</span>
+          <h3 class="drill-title">Virtual Reality (VR) Safety Videos</h3>
+          <p class="drill-description">
+          Experience immersive 360° safety training videos designed for VR headsets.
+          Learn disaster response through realistic virtual environments.
+         </p>
+         <a href="{% url 'vr_videos' %}" class="btn btn-secondary">
+          Start VR Safety Videos →
+         </a>
+        </div>
+
+        <div class="drill-card">
+  <span class="drill-icon">📱</span>
+
+  <h3 class="drill-title">
+    Flood Safety AR (Marker-Based)
+  </h3>
+
+  <p class="drill-description">
+    Scan a printed marker using your mobile camera to experience
+    a 3D flood scenario and understand safe response actions.
+  </p>
+
+  <ul class="drill-meta">
+    <li>📌 Requires printed marker</li>
+    <li>📷 Mobile camera required</li>
+    <li>🌐 Works on most Android devices</li>
+  </ul>
+
+  <a
+    href="{% static 'webxr/marker/flood/index.html' %}"
+    class="btn btn-success"
+    target="_blank"
+    rel="noopener"
+  >
+    Start AR Drill →
+  </a>
+</div>
+
+
+
+
+
+
+    </div>
+</section>
+
+
+        <!-- Drills Grid -->
+        <section class="section">
+            <div class="drills-grid" id="drillsGrid">
+                <!-- Drills will be generated by JS -->
+            </div>
+        </section>
+
+        
+    </main>
+
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script>
+        let drillTimer = null;
+        let timeRemaining = 0;
+        let isPaused = false;
+        let activeDrillId = null;
+
+        const drills = [
+            {
+                id: 'earthquake-drill',
+                title: 'Earthquake Response Drill',
+                description: 'Drop, Cover, and Hold On - Practice the proper response to earthquake shaking',
+                icon: '🌍',
+                duration: 300,
+                steps: ['Feel shaking', 'Drop to ground', 'Take cover', 'Hold position', 'Await all-clear'],
+                status: 'pending',
+                lastCompleted: null
+            },
+            {
+                id: 'fire-evacuation',
+                title: 'Fire Evacuation Drill',
+                description: 'Navigate to safety following proper evacuation procedures',
+                icon: '🔥',
+                duration: 420,
+                steps: ['Hear alarm', 'Check door', 'Exit building', 'Meet at rally point', 'Report safe'],
+                status: 'completed',
+                lastCompleted: '2024-11-28'
+            },
+            {
+                id: 'tornado-shelter',
+                title: 'Tornado Shelter Drill',
+                description: 'Quickly move to designated safe room or shelter area',
+                icon: '🌪️',
+                duration: 180,
+                steps: ['Hear warning', 'Grab essentials', 'Move to shelter', 'Protect head', 'Wait for all-clear'],
+                status: 'pending',
+                lastCompleted: null
+            },
+            {
+                id: 'active-shooter',
+                title: 'Active Threat Response',
+                description: 'Run, Hide, Fight - Practice active threat survival strategies',
+                icon: '🏃',
+                duration: 360,
+                steps: ['Identify threat', 'Evaluate options', 'Execute plan', 'Secure position', 'Await response'],
+                status: 'completed',
+                lastCompleted: '2024-11-25'
+            },
+            {
+                id: 'medical-emergency',
+                title: 'Medical Emergency Drill',
+                description: 'Respond to a medical crisis with proper first aid protocols',
+                icon: '🏥',
+                duration: 480,
+                steps: ['Assess scene', 'Check vitals', 'Call for help', 'Provide aid', 'Monitor patient'],
+                status: 'completed',
+                lastCompleted: '2024-11-29'
+            },
+            {
+                id: 'flood-evacuation',
+                title: 'Flood Evacuation Drill',
+                description: 'Safely evacuate from a flooding area to higher ground',
+                icon: '🌊',
+                duration: 600,
+                steps: ['Receive warning', 'Secure valuables', 'Evacuate safely', 'Avoid water', 'Reach high ground'],
+                status: 'pending',
+                lastCompleted: null
+            }
+        ];
+
+        // Load drill status from localStorage
+        function loadDrillStatus() {
+            const savedStatus = localStorage.getItem('drillStatus');
+            if (savedStatus) {
+                const statusData = JSON.parse(savedStatus);
+                drills.forEach(drill => {
+                    if (statusData[drill.id]) {
+                        drill.status = statusData[drill.id].status;
+                        drill.lastCompleted = statusData[drill.id].lastCompleted;
+                    }
+                });
+            }
+        }
+
+        // Save drill status
+        function saveDrillStatus(drillId, status) {
+            const savedStatus = localStorage.getItem('drillStatus');
+            const statusData = savedStatus ? JSON.parse(savedStatus) : {};
+            statusData[drillId] = {
+                status: status,
+                lastCompleted: status === 'completed' ? new Date().toISOString().split('T')[0] : null
+            };
+            localStorage.setItem('drillStatus', JSON.stringify(statusData));
+        }
+
+        // Render drills
+        function renderDrills() {
+            loadDrillStatus();
+            const grid = document.getElementById('drillsGrid');
+            grid.innerHTML = drills.map((drill, index) => `
+                <div class="drill-card animate-fade-up" style="animation-delay: ${0.1 + index * 0.05}s">
+                    <div class="drill-header">
+                        <span class="drill-icon">${drill.icon}</span>
+                        <span class="drill-status status-${drill.status}">
+                            ${drill.status === 'completed' ? '✓ Completed' : '⏳ Pending'}
+                        </span>
+                    </div>
+                    <h3 class="drill-title">${drill.title}</h3>
+                    <p class="drill-description">${drill.description}</p>
+                    <div class="drill-meta">
+                        <span class="drill-duration">⏱️ ${Math.floor(drill.duration / 60)} min</span>
+                        <span class="drill-steps">📋 ${drill.steps.length} steps</span>
+                    </div>
+                    ${drill.lastCompleted ? `
+                        <p class="drill-last-completed">Last: ${drill.lastCompleted}</p>
+                    ` : ''}
+                    <button class="btn ${drill.status === 'completed' ? 'btn-ghost' : 'btn-primary'}" 
+                            onclick="startDrill('${drill.id}', ${drill.duration})">
+                        ${drill.status === 'completed' ? 'Practice Again' : 'Start Drill'} →
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Start drill
+        function startDrill(drillId, duration) {
+            if (drillTimer) {
+                alert('⚠️ Please complete or stop the current drill first');
+                return;
+            }
+
+            activeDrillId = drillId;
+            timeRemaining = duration;
+            isPaused = false;
+
+            const drill = drills.find(d => d.id === drillId);
+            document.getElementById('drillTimer').style.display = 'block';
+            document.getElementById('drillTimer').scrollIntoView({ behavior: 'smooth' });
+
+            updateTimerDisplay();
+            drillTimer = setInterval(() => {
+                if (!isPaused) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+
+                    if (timeRemaining <= 0) {
+                        completeDrill();
+                    }
+                }
+            }, 1000);
+
+            alert(`🚨 ${drill.title}\n\nDrill Started!\n\nFollow these steps:\n${drill.steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}`);
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Pause drill
+        function pauseDrill() {
+            isPaused = !isPaused;
+            event.target.innerHTML = isPaused ? '▶️ Resume' : '⏸️ Pause';
+        }
+
+        // Stop drill
+        function stopDrill() {
+            if (confirm('Are you sure you want to stop this drill?')) {
+                clearInterval(drillTimer);
+                drillTimer = null;
+                document.getElementById('drillTimer').style.display = 'none';
+                activeDrillId = null;
+            }
+        }
+
+        // Complete drill
+        function completeDrill() {
+            clearInterval(drillTimer);
+            drillTimer = null;
+            document.getElementById('drillTimer').style.display = 'none';
+
+            saveDrillStatus(activeDrillId, 'completed');
+
+            // Update XP and drills completed
+            const currentXP = parseInt(localStorage.getItem('totalXP') || '2450');
+            localStorage.setItem('totalXP', currentXP + 200);
+
+            const drillsCompleted = parseInt(localStorage.getItem('drillsCompleted') || '5');
+            localStorage.setItem('drillsCompleted', drillsCompleted + 1);
+
+            alert('🎉 Drill Completed!\n\n✓ Well done!\n⭐ +200 XP earned\n\nYou\'re better prepared for emergencies!');
+
+            activeDrillId = null;
+            renderDrills();
+        }
+
+        // Initialize
+        renderDrills();
+    </script>
+
+    <!-- Include floating chat button -->
+    {% include 'partials/floating_chat_button.html' %}
+
+    <script src="{% static 'js/mobile-menu.js' %}"></script>
+</body>
+</html>

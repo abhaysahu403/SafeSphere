@@ -1,0 +1,386 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SafeLearn - Leaderboard</title>
+    <meta name="description" content="Compete with other learners and track your progress">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modern-backgrounds.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <style>
+      /* Small helper styles for leaderboard extras (keeps most styling in your main CSS) */
+      .controls {
+        display:flex;
+        gap:12px;
+        align-items:center;
+        margin:18px 0;
+        flex-wrap:wrap;
+      }
+      .view-pill { padding:8px 14px; border-radius:999px; cursor:pointer; border:1px solid var(--color-gray-200); background:var(--color-white); font-weight:600; }
+      .view-pill.active { background: linear-gradient(135deg,var(--color-blue-light),var(--color-blue-primary)); color:white; border-color:transparent; transform:translateY(-2px); box-shadow:var(--shadow-md); }
+      .select { padding:8px 10px; border-radius:8px; border:1px solid var(--color-gray-200); background:var(--color-white); font-weight:600; }
+      .user-metrics { display:flex; gap:16px; align-items:center; background:var(--color-white); border-radius:12px; padding:14px; box-shadow:var(--shadow-md); margin-bottom:16px; }
+      .metrics-item { min-width:120px; text-align:center; }
+      .small-muted { font-size:13px; color:var(--color-gray-600); }
+      @media (max-width:900px){ .controls{flex-direction:column; align-items:flex-start;} .top-three{grid-template-columns:1fr;} }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Sidebar (same as before) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">🛡️</span>
+          <span class="logo-text">SafeSphere</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="{% url 'learn' %}" class="nav-link {% if request.resolver_match.url_name == 'learn' %}active{% endif %}">
+            <span class="nav-icon">📚</span>
+            <span class="nav-text">Learn</span>
+        </a>
+             <a href="{% url 'protect' %}" class="nav-link {% if request.resolver_match.url_name == 'protect' %}active{% endif %}">
+            <span class="nav-icon">🏡</span>
+            <span class="nav-text">Protect Home, Farm & Livelihood</span>
+        </a>
+        
+        <a href="{% url 'games' %}" class="nav-link {% if request.resolver_match.url_name == 'games' %}active{% endif %}">
+            <span class="nav-icon">🎮</span>
+            <span class="nav-text">Games</span>
+        </a>
+        <a href="{% url 'drills' %}" class="nav-link {% if request.resolver_match.url_name == 'drills' %}active{% endif %}">
+            <span class="nav-icon">🚨</span>
+            <span class="nav-text">Drills</span>
+        </a>
+        
+        <a href="{% url 'emergency' %}" class="nav-link emergency-link {% if request.resolver_match.url_name == 'emergency' %}active{% endif %}">
+            <span class="nav-icon">🆘</span>
+            <span class="nav-text">Emergency</span>
+        </a>
+        <a href="{% url 'chat' %}" class="nav-link {% if request.resolver_match.url_name == 'chat' %}active{% endif %}">
+            <span class="nav-icon">💬</span>
+            <span class="nav-text">AI Assistant</span>
+        </a>
+        
+        <!-- Weather page -->
+        <a href="{% url 'weather' %}" class="nav-link {% if request.resolver_match.url_name == 'weather' %}active{% endif %}">
+            <span class="nav-icon">🌦</span>
+            <span class="nav-text">Weather</span>
+        </a>
+        <!-- Map page -->
+        <a href="{% url 'map' %}" class="nav-link {% if request.resolver_match.url_name == 'map' %}active{% endif %}">
+            <span class="nav-icon">🗺️</span>
+            <span class="nav-text">Safety Map</span>
+        </a>
+        <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">Profile</span>
+        </a>
+
+
+     
+     
+     
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="leaderboard-banner animate-fade-up">
+        <div class="banner-content">
+          <h1 class="banner-title">🏆 Leaderboard</h1>
+          <p class="banner-subtitle">See how you rank among SafeLearn champions — global, state & institute views</p>
+        </div>
+      </div>
+
+      <!-- Top 3 (Indian-style example) -->
+      <section class="top-three animate-fade-up" style="animation-delay:0.1s">
+        <div class="top-rank-card rank-2">
+          <div class="rank-medal">🥈</div>
+          <div class="rank-avatar">👨‍🎓</div>
+          <h3 class="rank-name">Priyansh Vakhodiya</h3>
+          <p class="rank-score">10,90 XP</p>
+        </div>
+        <div class="top-rank-card rank-1">
+          <div class="rank-medal">🥇</div>
+          <div class="rank-avatar">👨‍🎓</div>
+          <h3 class="rank-name">Dipesh yadav</h3>
+          <p class="rank-score">1100 XP</p>
+          <div class="rank-crown">👑</div>
+        </div>
+        <div class="top-rank-card rank-3">
+          <div class="rank-medal">🥉</div>
+          <div class="rank-avatar">👨‍🎓</div>
+          <h3 class="rank-name">Kiran Patel</h3>
+          <p class="rank-score">9,50 XP</p>
+        </div>
+      </section>
+
+      <!-- Controls: view pills + institute/state selectors -->
+      <div class="controls animate-fade-up" style="animation-delay:0.2s">
+        <div id="viewPills">
+          <span class="view-pill active" data-view="global">India (Global)</span>
+          <span class="view-pill" data-view="institute">Institute-wise</span>
+          <span class="view-pill" data-view="state">State-wise</span>
+          <span class="view-pill" data-view="friends">Friends</span>
+        </div>
+
+        <select id="instituteSelect" class="select" style="display:none">
+          <option value="">— Choose Institute —</option>
+        </select>
+
+        <select id="stateSelect" class="select" style="display:none">
+          <option value="">— Choose State —</option>
+        </select>
+
+        <div style="margin-left:auto; min-width:220px;">
+          <button id="refreshBtn" class="btn btn-ghost">Refresh</button>
+        </div>
+      </div>
+
+      <!-- Your Performance Card -->
+      <div id="userMetrics" class="user-metrics animate-fade-up" style="animation-delay:0.25s">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:36px">😊</div>
+          <div>
+            <div style="font-weight:800" id="userName">You</div>
+            <div class="small-muted" id="userInstituteState">Institute • State</div>
+          </div>
+        </div>
+        <div class="metrics-item">
+          <div class="small-muted">Global Rank</div>
+          <div id="userGlobalRank" style="font-weight:800">—</div>
+        </div>
+        <div class="metrics-item">
+          <div class="small-muted">State Rank</div>
+          <div id="userStateRank" style="font-weight:800">—</div>
+        </div>
+        <div class="metrics-item">
+          <div class="small-muted">Institute Rank</div>
+          <div id="userInstituteRank" style="font-weight:800">—</div>
+        </div>
+        <div class="metrics-item">
+          <div class="small-muted">XP</div>
+          <div id="userXP" style="font-weight:800">—</div>
+        </div>
+        <div class="metrics-item">
+          <div class="small-muted">Level</div>
+          <div id="userLevel" style="font-weight:800">—</div>
+        </div>
+      </div>
+
+      <!-- Leaderboard Table -->
+      <section class="section animate-fade-up" style="animation-delay:0.3s">
+        <div class="leaderboard-table-container">
+          <table class="leaderboard-table" id="leaderboardTable">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Institute</th>
+                <th>State</th>
+                <th>XP</th>
+                <th>Level</th>
+                <th>Modules</th>
+                <th>Streak</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script>
+      /*************************************************************************
+       * Demo dataset (Indian names + institutes + states). Replace with API.
+       *************************************************************************/
+    const leaderboardData = [
+  { id: 'u1', name: 'Aman Verma', avatar:'👨‍🎓', xp:880, modules:18, streak:14, institute:'Sagar Public School, Bhopal', state:'Madhya Pradesh', friends:['u10'] },
+  { id: 'u2', name: 'Pooja Jain', avatar:'👩‍🎓', xp:845, modules:17, streak:12, institute:'Campion School, Bhopal', state:'Madhya Pradesh', friends:['u10'] },
+  { id: 'u3', name: 'Rahul Mishra', avatar:'👨‍🎓', xp:810, modules:16, streak:10, institute:'Delhi Public School, Bhopal', state:'Madhya Pradesh', friends:[] },
+  { id: 'u4', name: 'Neha Patel', avatar:'👩‍🎓', xp:770, modules:15, streak:9, institute:'St. Xavier’s School, Bhopal', state:'Madhya Pradesh', friends:[] },
+  { id: 'u5', name: 'Vikas Singh', avatar:'👨‍🎓', xp:735, modules:14, streak:8, institute:'Jawahar Navodaya Vidyalaya, Bhopal', state:'Madhya Pradesh', friends:['u10'] },
+  { id: 'u6', name: 'Anjali Tiwari', avatar:'👩‍🎓', xp:690, modules:13, streak:7, institute:'Kendriya Vidyalaya No.1, Bhopal', state:'Madhya Pradesh', friends:[] },
+  { id: 'u7', name: 'Saurabh Yadav', avatar:'👨‍🎓', xp:650, modules:12, streak:6, institute:'SIRT College, Bhopal', state:'Madhya Pradesh', friends:[] },
+  { id: 'u8', name: 'Ritika Sharma', avatar:'👩‍🎓', xp:610, modules:11, streak:6, institute:'LNCT Group of Colleges, Bhopal', state:'Madhya Pradesh', friends:[] },
+  { id: 'u9', name: 'Mohit Khan', avatar:'👨‍🎓', xp:560, modules:10, streak:5, institute:'Oriental Institute of Science & Tech, Bhopal', state:'Madhya Pradesh', friends:[] },
+
+  // 👤 Logged-in user
+  { 
+    id: 'u10',
+    name: 'You',
+    avatar:'😊',
+    xp:520,
+    modules:10,
+    streak:7,
+    institute:'Sagar Institute of Research & Technology, Bhopal',
+    state:'Madhya Pradesh',
+    friends:['u1','u2','u5'],
+    isUser:true
+  },
+];
+
+      // Build unique institute/state lists
+      const uniqueInstitutes = [...new Set(leaderboardData.map(u=>u.institute))].sort();
+      const uniqueStates = [...new Set(leaderboardData.map(u=>u.state))].sort();
+
+      // DOM references
+      const leaderboardBody = document.getElementById('leaderboardBody');
+      const viewPills = document.getElementById('viewPills');
+      const instituteSelect = document.getElementById('instituteSelect');
+      const stateSelect = document.getElementById('stateSelect');
+      const userNameEl = document.getElementById('userName');
+      const userInstituteState = document.getElementById('userInstituteState');
+      const userGlobalRankEl = document.getElementById('userGlobalRank');
+      const userStateRankEl = document.getElementById('userStateRank');
+      const userInstituteRankEl = document.getElementById('userInstituteRank');
+      const userXPEl = document.getElementById('userXP');
+      const userLevelEl = document.getElementById('userLevel');
+      const refreshBtn = document.getElementById('refreshBtn');
+
+      // Populate selects
+      uniqueInstitutes.forEach(i=>{
+        const opt=document.createElement('option'); opt.value=i; opt.textContent=i; instituteSelect.appendChild(opt);
+      });
+      uniqueStates.forEach(s=>{
+        const opt=document.createElement('option'); opt.value=s; opt.textContent=s; stateSelect.appendChild(opt);
+      });
+
+      // Compute level from XP (simple rule)
+      function xpToLevel(xp){ return Math.floor(xp/600) + 1; }
+
+      // Utility: return ranked copy sorted by xp desc
+      function rankedData(data){
+        const copy = [...data].sort((a,b)=>b.xp - a.xp);
+        copy.forEach((u,i)=>u.rank=i+1);
+        return copy;
+      }
+
+      // Filter based on view
+      function getViewFilteredData(view){
+        switch(view){
+          case 'institute':
+            const inst = instituteSelect.value;
+            if(!inst) return []; // require selection
+            return rankedData(leaderboardData.filter(u=>u.institute===inst));
+          case 'state':
+            const st = stateSelect.value;
+            if(!st) return [];
+            return rankedData(leaderboardData.filter(u=>u.state===st));
+          case 'friends':
+            const me = leaderboardData.find(u=>u.isUser);
+            if(!me) return [];
+            const friendsSet = new Set([me.id, ...(me.friends||[])]);
+            return rankedData(leaderboardData.filter(u=>friendsSet.has(u.id)));
+          default: // global (India)
+            return rankedData(leaderboardData);
+        }
+      }
+
+      // Render function
+      function render(view='global'){
+        // show/hide selects
+        instituteSelect.style.display = view==='institute' ? 'inline-block' : 'none';
+        stateSelect.style.display = view==='state' ? 'inline-block' : 'none';
+
+        const rows = getViewFilteredData(view);
+        if(rows.length===0 && (view==='institute' || view==='state')){
+          leaderboardBody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--color-gray-600);padding:18px">Choose ${view==='institute' ? 'an institute' : 'a state'} to view ranks.</td></tr>`;
+          return;
+        }
+
+        leaderboardBody.innerHTML = rows.map(u => `
+          <tr class="leaderboard-row ${u.isUser ? 'user-row' : ''}">
+            <td class="rank-cell">${u.rank <=3 ? (u.rank===1?'🥇':u.rank===2?'🥈':'🥉') : u.rank}</td>
+            <td class="user-cell"><span class="user-avatar">${u.avatar}</span> <span class="user-name">${u.name}${u.isUser?' (You)':''}</span></td>
+            <td>${u.institute}</td>
+            <td>${u.state}</td>
+            <td>${u.xp.toLocaleString()}</td>
+            <td><span class="level-badge">Lvl ${xpToLevel(u.xp)}</span></td>
+            <td>${u.modules}</td>
+            <td><span class="streak-badge">${u.streak} 🔥</span></td>
+          </tr>
+        `).join('');
+
+        // update top 3 banner from global view (optional)
+        if(view==='global'){
+          const top3 = rankedData(leaderboardData).slice(0,3);
+          const cards = document.querySelectorAll('.top-rank-card');
+          cards.forEach((card,i)=>{ if(top3[i]){ card.querySelector('.rank-name').textContent=top3[i].name; card.querySelector('.rank-score').textContent=top3[i].xp.toLocaleString()+' XP'; }});
+        }
+      }
+
+      // Update user's small performance card (global / state / institute ranks)
+      function updateUserMetrics(){
+        const me = leaderboardData.find(u=>u.isUser);
+        if(!me) return;
+        userNameEl.textContent = me.name==='You'? 'You' : me.name;
+        userInstituteState.textContent = `${me.institute} • ${me.state}`;
+        userXPEl.textContent = me.xp.toLocaleString();
+        userLevelEl.textContent = xpToLevel(me.xp);
+
+        // Global rank
+        const globalRank = rankedData(leaderboardData).findIndex(u=>u.id===me.id)+1;
+        userGlobalRankEl.textContent = globalRank;
+
+        // State rank
+        const stateRank = rankedData(leaderboardData.filter(u=>u.state===me.state)).findIndex(u=>u.id===me.id)+1;
+        userStateRankEl.textContent = stateRank;
+
+        // Institute rank
+        const insRank = rankedData(leaderboardData.filter(u=>u.institute===me.institute)).findIndex(u=>u.id===me.id)+1;
+        userInstituteRankEl.textContent = insRank;
+      }
+
+      // View pill click behaviour
+      viewPills.querySelectorAll('.view-pill').forEach(p=>{
+        p.addEventListener('click', ()=>{
+          viewPills.querySelectorAll('.view-pill').forEach(x=>x.classList.remove('active'));
+          p.classList.add('active');
+          const view = p.dataset.view;
+          render(view);
+        });
+      });
+
+      // when institute/state selection changes, re-render
+      instituteSelect.addEventListener('change', ()=> render('institute'));
+      stateSelect.addEventListener('change', ()=> render('state'));
+
+      // Refresh (in real app you'd re-fetch from server)
+      refreshBtn.addEventListener('click', ()=>{
+        // demo: random small xp bump to simulate changes
+        leaderboardData.forEach(u=>{
+          if(Math.random()<0.2) u.xp += Math.floor(Math.random()*120);
+        });
+        updateUserMetrics();
+        const active = document.querySelector('.view-pill.active').dataset.view;
+        render(active);
+      });
+
+      // On start: calculate ranks & render global
+      updateUserMetrics();
+      render('global');
+
+      // If your real backend is ready: replace leaderboardData with fetch('/api/leaderboard') and then call updateUserMetrics()/render()
+    </script>
+
+    <script src="{% static 'js/mobile-menu.js' %}"></script>
+</body>
+</html>

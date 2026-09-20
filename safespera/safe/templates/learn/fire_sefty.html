@@ -1,0 +1,570 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fire Safety Module | SafeLearn</title>
+  <meta name="description" content="Fire safety training — prevention, evacuation, extinguisher use, and drills.">
+
+  <style>
+    :root {
+      --brand: #d9534f;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --bg: #fff7f6;
+      --maxw: 980px;
+      --accent: #ff9800;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#fffafd 0%,#f8f9fa 100%);
+      color: #222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height: 1.6;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      transition: box-shadow .2s ease;
+      /* leave room for the alert bar (48px) */
+      padding-top: 68px;
+    }
+
+    /* LIVE DISASTER ALERT BAR */
+    #disaster-alert-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 48px;
+      z-index: 9999;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 6px 18px rgba(8,24,40,0.06);
+      padding: 6px 12px;
+      text-align: center;
+      transition: transform .25s ease, opacity .25s ease;
+    }
+    #disaster-alert-bar .alert-inner { display:flex; gap:10px; align-items:center; justify-content:center; max-width:1200px; width:100%; padding:0 12px; }
+    #disaster-alert-bar .icon { font-size:18px; line-height:1; }
+
+    .alert-normal {
+      background: linear-gradient(90deg, #1e7e34, #28a745);
+      color: white;
+    }
+    .alert-warning {
+      background: linear-gradient(90deg, #ff9800, #ffc107);
+      color: #222;
+    }
+    .alert-danger {
+      background: linear-gradient(90deg, #c62828, #e53935);
+      color: white;
+    }
+    /* small dismiss button for teachers/demo */
+    #disaster-alert-bar .dismiss {
+      margin-left: auto;
+      opacity: .9;
+      font-size: 13px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 6px 8px;
+      cursor: pointer;
+      border: none;
+      color: inherit;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--maxw);
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 14px 40px rgba(8,24,40,0.06);
+      padding: 26px;
+      margin-bottom: 40px;
+    }
+
+    /* module relevance glow when active (heatwave relevance) */
+    .wrap.module-relevant {
+      box-shadow: 0 18px 60px rgba(217,83,79,0.12), 0 6px 24px rgba(255,152,0,0.06);
+      border: 1px solid rgba(217,83,79,0.06);
+      transform: translateY(-2px);
+    }
+
+    .topbar {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+    h1 { margin:0; font-size:1.8rem; color: var(--brand); }
+    p.lead { margin:6px 0 12px; color: var(--muted); font-size:0.98rem; }
+    .meta-row { display:flex; gap:10px; align-items:center; font-size:0.9rem; color:var(--muted); flex-wrap:wrap; }
+    .badge { background:#fff3f3; color:var(--brand); padding:6px 10px; border-radius:999px; font-weight:700; }
+
+    .grid { display:grid; grid-template-columns: 1fr 320px; gap:18px; align-items:start; }
+    @media (max-width:920px) { .grid { grid-template-columns:1fr; } .sidecard { order:-1 } }
+
+    .section { background:#ffffff; padding:14px; border-radius:10px; margin-top:14px; border:1px solid rgba(10,20,30,0.03); }
+    .section h2 { margin:0 0 8px; color:var(--brand); }
+    ul, ol { margin:8px 0 0 18px; }
+    .info-box { background: linear-gradient(180deg,#fff7f2,#fffdf9); padding:10px; border-radius:8px; border-left:4px solid var(--accent); color:#4a2b15; }
+
+    .poster { width:100%; border-radius:8px; display:block; margin-top:8px; }
+    .kit-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .kit-item { background:#fff6f6; padding:8px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.03); color:#3a1f1f; }
+
+    .cta-row { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:700; text-decoration:none; color:#fff; }
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-ghost { background: transparent; color:var(--brand); border:1px solid rgba(8,20,30,0.06); padding:9px 12px; border-radius:10px; }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .video-container iframe,
+    .video-container video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      object-fit: contain;
+    }
+
+    /* Responsive video container */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* Make video fill container properly */
+    .video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Quiz styles */
+    .quiz-box { background:#fffaf0; border-left:5px solid #ffb74d; padding:16px; border-radius:8px; margin-top:12px; }
+    .quiz-box h2 { color:#ff9800; margin-top:0; }
+    .quiz-question { margin-bottom:12px; }
+    .quiz-question p { margin:0 0 8px 0; font-weight:600; }
+    .quiz-options label { display:block; padding:8px 6px; border-radius:6px; cursor:pointer; }
+    .quiz-options input[type="radio"] { margin-right:10px; transform: translateY(1px); }
+    .quiz-options label:hover { background: rgba(255,152,0,0.04); }
+    .submit-btn { background:#5cb85c; color:#fff; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; margin-top:8px; font-weight:800; }
+    .result { font-weight:800; margin-top:10px; }
+
+    /* sidecard */
+    .sidecard { position: sticky; top:20px; }
+    .sidecard .section { margin-top:0; }
+    footer { margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+    .note { font-size:0.9rem; color:var(--muted); }
+
+    /* small helper */
+    .small { font-size:0.88rem; color:var(--muted); }
+  </style>
+</head><script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    {
+      pageLanguage: 'en',
+      includedLanguages: 'en,hi,ta,te,bn,gu,kn,ml,mr,pa,ur',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    },
+    'google_translate_element'
+  );
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<body>
+  <!-- Live Disaster Alert Bar -->
+  <div id="disaster-alert-bar" class="alert-normal" role="status" aria-live="polite" aria-atomic="true">
+    <div class="alert-inner">
+      <span class="icon" id="alertIcon">🟢</span>
+      <span id="alertText">Weather is normal. Stay prepared.</span>
+      <button class="dismiss" id="dismissAlert" title="Dismiss alert (will return on next load)">Dismiss</button>
+    </div>
+  </div>
+
+  <main class="wrap" role="main" aria-labelledby="pageTitle">
+    <div class="topbar">
+      <div>
+        <div id="google_translate_element" class="lang-selector"></div>
+        <h1 id="pageTitle">🔥 Fire Safety — Prevention, Response & Recovery</h1>
+        <p class="lead">Objective: Learn how fires start, how to prevent them, how to evacuate safely, and how to use an extinguisher correctly.</p>
+        <div class="meta-row">
+          <span class="badge">Module • Fire</span>
+          <span class="small">Est. time: 10–18 min</span>
+          <span class="small">Target: Students age 10+</span>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="{% url 'learn' %}">⬅ Back to Modules</a>
+        <a class="btn btn-primary" href="#quiz">Take Quiz →</a>
+      </div>
+    </div>
+
+    <div class="grid" role="region" aria-labelledby="hookTitle">
+      <!-- MAIN COLUMN -->
+      <div>
+
+        <!-- HOOK -->
+        <section class="section" id="hook" aria-labelledby="hookTitle">
+          <h2 id="hookTitle">Hook — imagine a kitchen fire</h2>
+          <p>You're cooking and a pan catches fire. Smoke builds up fast. What would you do in the first 30 seconds to protect yourself and others?</p>
+        </section>
+
+        <!-- WHAT -->
+        <section class="section" aria-labelledby="whatIs">
+          <h2 id="whatIs">1. What is Fire?</h2>
+          <p>Fire is combustion — a chemical reaction that needs fuel, heat, and oxygen. Removing one element of the triangle stops the fire.</p>
+          <ul>
+            <li>Fuel: wood, paper, cloth, petrol</li>
+            <li>Heat: spark, friction, matchstick</li>
+            <li>Oxygen: air</li>
+          </ul>
+        </section>
+
+        <!-- CAUSES -->
+        <section class="section" aria-labelledby="causes">
+          <h2 id="causes">2. Common Causes of Fire</h2>
+          <ul>
+            <li>Electrical faults and short circuits</li>
+            <li>Gas leaks and unattended cooking</li>
+            <li>Candles, incense sticks and smoking indoors</li>
+            <li>Flammable liquids stored improperly</li>
+            <li>Overheating devices</li>
+          </ul>
+        </section>
+
+        <!-- CLASSES -->
+        <section class="section" aria-labelledby="classes">
+          <h2 id="classes">3. Classes of Fire</h2>
+          <p>Know the class so you can choose the right extinguisher:</p>
+          <ul>
+            <li><strong>Class A</strong>: Wood, paper, cloth</li>
+            <li><strong>Class B</strong>: Petrol, oil, paint</li>
+            <li><strong>Class C</strong>: LPG, CNG, gas</li>
+            <li><strong>Class D</strong>: Metals (magnesium, etc.)</li>
+            <li><strong>Class E</strong>: Electrical fires</li>
+          </ul>
+        </section>
+
+        <!-- PASS METHOD -->
+        <section class="section" aria-labelledby="pass">
+          <h2 id="pass">4. How to Use a Fire Extinguisher (PASS)</h2>
+          <img src="{% static 'image/paas.jpg' %}" alt="PASS method: Pull Aim Squeeze Sweep" class="poster">
+          <p>Use PASS — Pull pin, Aim low at base, Squeeze handle, Sweep side to side.</p>
+          <div class="info-box" role="status" aria-live="polite">
+            Only attempt to use an extinguisher if the fire is small and you're not in danger. If in doubt, evacuate and call emergency services.
+          </div>
+        </section>
+
+        <!-- PREVENTION -->
+        <section class="section" aria-labelledby="prevention">
+          <h2 id="prevention">5. Fire Prevention Tips</h2>
+          <ul>
+            <li>Check wiring and avoid overloading sockets</li>
+            <li>Keep flammable items away from heat sources</li>
+            <li>Install smoke detectors and test monthly</li>
+            <li>Keep fire extinguishers accessible and know how to use them</li>
+            <li>Never leave cooking unattended</li>
+          </ul>
+        </section>
+
+        <!-- EVACUATION -->
+        <section class="section" aria-labelledby="evac">
+          <h2 id="evac">6. Evacuation Steps During Fire</h2>
+          <ul>
+            <li>Stay calm and shout to alert others</li>
+            <li>Use stairs — never elevators</li>
+            <li>Crawl low under smoke and cover your mouth</li>
+            <li>Close doors behind you to slow fire spread</li>
+            <li>Call emergency number (e.g., <strong>101</strong>) once safe</li>
+          </ul>
+        </section>
+
+        <!-- VIDEO + POSTER -->
+        <section class="section" aria-labelledby="videoTitle">
+          <h2 id="videoTitle">Watch: Fire Safety Demo</h2>
+
+          <div class="video-wrapper">
+            <video
+              controls
+              preload="metadata"
+              poster="{% static 'image/fire-poster.jpg' %}"
+              playsinline>
+              <source src="{% static 'video/fire_safety_training.mp4' %}" type="video/mp4">
+            </video>
+          </div>
+
+          <p class="small" style="margin-top:8px">
+            Tip: Play the video in full-screen on mobile to practice evacuation steps with your family.
+          </p>
+        </section>
+
+        <!-- PRACTICAL -->
+        <section class="section" aria-labelledby="activities">
+          <h2 id="activities">Activities & Drills</h2>
+          <ol>
+            <li>Classroom drill: timed evacuation to assembly point and roll-call.</li>
+            <li>Extinguisher demo: teacher shows PASS method with a training extinguisher.</li>
+            <li>Family plan: everyone practices escape routes at home and a meeting point.</li>
+          </ol>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="section quiz-box" id="quiz" aria-labelledby="quizHeader">
+          <h2 id="quizHeader">📝 Fire Safety Quiz</h2>
+
+          <form id="quizForm" aria-describedby="quizHelp">
+            <div id="quizHelp" class="small" style="margin-bottom:8px">Choose the best answer and press Submit.</div>
+
+            <div class="quiz-question" role="group" aria-labelledby="q1label">
+              <p id="q1label"><strong>1.</strong> What are the three parts of the fire triangle?</p>
+              <div class="quiz-options">
+                <label><input type="radio" name="q1" value="A"> Fuel, Heat, Oxygen</label>
+                <label><input type="radio" name="q1" value="B"> Smoke, Fuel, Gas</label>
+              </div>
+            </div>
+
+            <div class="quiz-question" role="group" aria-labelledby="q2label">
+              <p id="q2label"><strong>2.</strong> What is the correct method to use an extinguisher?</p>
+              <div class="quiz-options">
+                <label><input type="radio" name="q2" value="A"> PASS</label>
+                <label><input type="radio" name="q2" value="B"> FIRE</label>
+              </div>
+            </div>
+
+            <div class="quiz-question" role="group" aria-labelledby="q3label">
+              <p id="q3label"><strong>3.</strong> Which fire class involves electrical fires?</p>
+              <div class="quiz-options">
+                <label><input type="radio" name="q3" value="A"> Class A</label>
+                <label><input type="radio" name="q3" value="B"> Class E</label>
+              </div>
+            </div>
+
+            <button type="button" class="submit-btn" id="submitQuiz">Submit Quiz</button>
+            <div id="quizResult" class="result" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+
+        <!-- NAVIGATION -->
+        <div class="section" style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+          <a class="btn btn-ghost" href="{% url 'learn' %}">  ⬅ Back to Modules</a>
+        </div>
+
+      </div>
+
+      <!-- SIDE COLUMN -->
+      <aside class="sidecard" aria-labelledby="sideTitle">
+        <div class="section" id="sideTitle">
+          <h2>Quick Actions</h2>
+          <p class="small">Tools to prepare and act quickly.</p>
+          <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+            <button class="btn btn-ghost" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Take Quiz</button>
+            <a class="btn btn-primary" href="{% url 'learn' %}">All Modules</a>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Poster</h3>
+          <img class="poster" src="{% static 'image/do_in_fire.png' %}" alt="Fire safety poster">
+          <p class="small">Print or display this in classrooms.</p>
+        </div>
+
+        <div class="section">
+          <h3>Checklist</h3>
+          <ul class="small">
+            <li>Install and test smoke detectors</li>
+            <li>Know two escape routes from each room</li>
+            <li>Keep fire extinguisher accessible</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h3>Emergency Numbers</h3>
+          <p class="small">Save local numbers on every phone.</p>
+          <ul class="small">
+            <li>Fire & Rescue: <strong>101</strong></li>
+            <li>Emergency (general): <strong>112</strong></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="note">Accessibility: images have alt text; consider adding captions or transcripts for videos and voice prompts for learners who need them.</div>
+      <div></div>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      /* --- Quiz logic (kept intact, small tidy) --- */
+      const answers = { q1: 'A', q2: 'A', q3: 'B' };
+
+      function grade() {
+        let correct = 0, total = 3;
+        for (let i=1;i<=total;i++){
+          const name = 'q' + i;
+          const el = document.querySelector('input[name="'+name+'"]:checked');
+          const val = el ? el.value : null;
+          if (val === answers[name]) correct++;
+        }
+        return { correct, total };
+      }
+
+      function showResult() {
+        const r = grade();
+        const pct = Math.round((r.correct / r.total) * 100);
+        const el = document.getElementById('quizResult');
+        let msg = `Score: ${r.correct} / ${r.total} (${pct}%) — `;
+        if (pct === 100) msg += 'Excellent! You have strong fire safety knowledge. ✅';
+        else if (pct >= 70) msg += 'Good — review the module for missed items.';
+        else msg += 'Review the module and practice the drills again.';
+        el.textContent = msg;
+        el.style.color = pct >= 70 ? '#0b7a3c' : '#b45309';
+        // save progress
+        try { localStorage.setItem('fire_quiz_score', JSON.stringify(r)); } catch(e) {}
+      }
+
+      document.getElementById('submitQuiz').addEventListener('click', showResult);
+
+      /* --- Disaster Alert & Context-aware highlight --- */
+
+      const alertBar = document.getElementById('disaster-alert-bar');
+      const alertText = document.getElementById('alertText');
+      const alertIcon = document.getElementById('alertIcon');
+      const dismissBtn = document.getElementById('dismissAlert');
+      const mainWrap = document.querySelector('.wrap');
+
+      // Dismiss temporarily (per-page)
+      dismissBtn.addEventListener('click', () => {
+        alertBar.style.transform = 'translateY(-110%)';
+        setTimeout(() => alertBar.style.opacity = '0', 260);
+      });
+
+      /**
+       * updateDisasterAlertFromWeather(data)
+       * Accepts an object: { temp: Number (°C), wind: Number (m/s or km/h), description: String }
+       * This function intentionally does not call external APIs. It is safe to call from your global weather code.
+       */
+      function updateDisasterAlertFromWeather(data) {
+        if (!data || typeof data !== 'object') return;
+
+        // Normalise temperature key names (temp or temperature)
+        let temp = data.temp ?? data.temperature ?? null;
+        let wind = data.wind ?? data.wind_speed ?? data.windSpeed ?? 0;
+        let desc = data.description ?? data.weather ?? '';
+
+        // try to parse strings (if any)
+        temp = (typeof temp === 'string') ? parseFloat(temp) : temp;
+        wind = (typeof wind === 'string') ? parseFloat(wind) : wind;
+
+        // Default: normal
+        alertBar.className = 'alert-normal';
+        alertIcon.innerText = '🟢';
+        alertText.innerText = gettext ? gettext('Weather is normal. Stay prepared.') : 'Weather is normal. Stay prepared.';
+        mainWrap.classList.remove('module-relevant');
+
+        // Heatwave - make module relevant
+        if (temp !== null && !Number.isNaN(temp) && temp >= 42) {
+          alertBar.className = 'alert-danger';
+          alertIcon.innerText = '🔥';
+          alertText.innerText = gettext ? gettext('Extreme Heatwave Alert! Avoid going outside. Drink water regularly.') : 'Extreme Heatwave Alert! Avoid going outside. Drink water regularly.';
+          // highlight module as especially relevant
+          mainWrap.classList.add('module-relevant');
+        }
+
+        // Storm / Cyclone risk (high wind)
+        else if (wind >= 15) {
+          alertBar.className = 'alert-warning';
+          alertIcon.innerText = '🌪️';
+          alertText.innerText = gettext ? gettext('Strong wind alert! Stay indoors and secure loose objects.') : 'Strong wind alert! Stay indoors and secure loose objects.';
+          mainWrap.classList.remove('module-relevant');
+        }
+
+        // Heavy rain / flood risk - (heuristic)
+        else if ((desc && /rain|storm|flood/i.test(desc)) || (wind >= 10 && temp <= 20)) {
+          alertBar.className = 'alert-warning';
+          alertIcon.innerText = '🌧️';
+          alertText.innerText = gettext ? gettext('Heavy rain risk! Avoid low-lying areas.') : 'Heavy rain risk! Avoid low-lying areas.';
+          mainWrap.classList.remove('module-relevant');
+        }
+
+        // if description contains 'smoke' or 'fire' show small educational prompt (non-alarm)
+        else if (desc && /smoke|fire/i.test(desc)) {
+          alertBar.className = 'alert-warning';
+          alertIcon.innerText = '⚠️';
+          alertText.innerText = gettext ? gettext('Smoke detected nearby. Review evacuation steps and stay low in smoky rooms.') : 'Smoke detected nearby. Review evacuation steps and stay low in smoky rooms.';
+        }
+
+        // ensure visible
+        alertBar.style.transform = '';
+        alertBar.style.opacity = '1';
+      }
+
+      // expose function for global scripts to call (non-destructive)
+      window.updateDisasterAlertFromWeather = updateDisasterAlertFromWeather;
+
+      // Listen for custom event: window.dispatchEvent(new CustomEvent('safe:weather:update', { detail: { temp:.., wind:.. } }))
+      window.addEventListener('safe:weather:update', function(e){
+        if (e && e.detail) updateDisasterAlertFromWeather(e.detail);
+      });
+
+      // Try to pick up existing global objects (if your main weather script sets these)
+      // Non-blocking and safe: we only read and call if available
+      try {
+        if (window.safeWeather && typeof window.safeWeather === 'object') {
+          updateDisasterAlertFromWeather(window.safeWeather);
+        } else if (window.currentWeather && typeof window.currentWeather === 'object') {
+          updateDisasterAlertFromWeather(window.currentWeather);
+        } else if (typeof window.getCurrentWeather === 'function') {
+          // if you expose a function, call it and update when it returns
+          const maybe = window.getCurrentWeather();
+          if (maybe && typeof maybe.then === 'function') {
+            // promise
+            maybe.then(updateDisasterAlertFromWeather).catch(()=>{});
+          } else updateDisasterAlertFromWeather(maybe);
+        }
+      } catch (err) {
+        // never crash page if weather objects are not available
+        console.warn('SafeSphere alert init:', err && err.message ? err.message : err);
+      }
+
+      // Small accessibility: allow keyboard focus to dismiss
+      dismissBtn.addEventListener('keyup', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') dismissBtn.click();
+      });
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wildfire Safety — SafeLearn</title>
+  <meta name="description" content="Wildfire safety for students: causes, prevention, evacuation, shelter-in-place, and drills." />
+
+  <style>
+    :root{
+      --brand: #d35400;      /* deep orange */
+      --accent: #ffb74d;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --bg: linear-gradient(180deg,#fffaf6 0%,#fff7f2 100%);
+      --maxw: 980px;
+      --danger: #b22222;
+    }
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      padding:20px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color:#1f2937;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+      display:flex;
+      justify-content:center;
+    }
+    .wrap{
+      width:100%;
+      max-width:var(--maxw);
+      background:var(--card);
+      border-radius:12px;
+      box-shadow:0 14px 40px rgba(8,24,40,0.06);
+      padding:26px;
+      margin-bottom:40px;
+    }
+
+    /* Topbar */
+    .topbar{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
+    h1{margin:0;font-size:1.8rem;color:var(--brand)}
+    p.lead{margin:6px 0 12px;color:var(--muted);font-size:0.98rem}
+    .meta-row{display:flex;gap:10px;align-items:center;font-size:0.9rem;color:var(--muted);flex-wrap:wrap}
+    .badge{background:#fff7ed;color:var(--brand);padding:6px 10px;border-radius:999px;font-weight:700}
+
+    /* layout */
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start}
+    @media (max-width:920px){.grid{grid-template-columns:1fr}.sidecard{order:-1}}
+
+    .section{background:#ffffff;padding:14px;border-radius:10px;margin-top:14px;border:1px solid rgba(10,20,30,0.03)}
+    .section h2{margin:0 0 8px;color:var(--brand)}
+    ul,ol{margin:8px 0 0 18px}
+
+    .info-box{background: linear-gradient(180deg,#fffaf0,#fffdf6);padding:10px;border-radius:8px;border-left:4px solid var(--accent);color:#4a2b15}
+    .danger-box{background:#fff7f7;padding:10px;border-radius:8px;border-left:4px solid var(--danger);color:#611111}
+
+    .poster{width:100%;border-radius:8px;display:block;margin-top:8px}
+    .kit-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .kit-item{background:#fff7ed;padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.03);color:#3a1f1f}
+
+    .cta-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;text-decoration:none;color:#fff}
+    .btn-primary{background:var(--brand)}
+    .btn-ghost{background:transparent;color:var(--brand);border:1px solid rgba(8,20,30,0.06);padding:9px 12px;border-radius:10px}
+
+    /* video */
+    .video-wrapper{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;margin:12px 0}
+    .video-wrapper video,.video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;display:block}
+
+    /* quiz */
+    .quiz-box{background:linear-gradient(180deg,#fffaf0,#fff7ea);border-left:5px solid var(--accent);padding:16px;border-radius:8px;margin-top:12px}
+    .quiz-box h2{color:#d97706;margin-top:0}
+    .quiz-question{margin-bottom:12px}
+    .quiz-options label{display:block;padding:8px 6px;border-radius:6px;cursor:pointer}
+    .quiz-options input[type="radio"]{margin-right:10px;transform:translateY(1px)}
+    .submit-btn{background:#16a34a;color:#fff;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;margin-top:8px;font-weight:800}
+    .result{font-weight:800;margin-top:10px}
+
+    /* sidecard */
+    .sidecard{position:sticky;top:20px}
+    .sidecard .section{margin-top:0}
+
+    footer{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .note{font-size:0.9rem;color:var(--muted)}
+
+    /* small utilities */
+    .muted{color:var(--muted);font-size:0.95rem}
+    .small{font-size:0.9rem;color:var(--muted)}
+
+    .poster {
+    width: 60%;         /* Is percentage ko kam-zyada karke aap size control kar sakte hain */
+    max-width: 180px;   /* Ek fixed maximum limit set kar di taaki zyada bada na dikhe */
+    height: auto;       /* Aspect ratio maintain rahega */
+    display: block;     /* Alignment ke liye zaroori hai */
+    margin: 10px auto;  /* Sidebar ke center mein dikhega */
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+  </style>
+</head>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    {
+      pageLanguage: 'en',
+      includedLanguages: 'en,hi,ta,te,bn,gu,kn,ml,mr,pa,ur',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    },
+    'google_translate_element'
+  );
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<body>
+  <main class="wrap" role="main" aria-labelledby="pageTitle">
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Wildfire Safety — Prevention, Evacuation & Shelter</h1>
+        <p class="lead">Objective: Understand how wildfires start, how to reduce risk, when to evacuate, and how to shelter safely.</p>
+        <div class="meta-row">
+          <span class="badge">Module • Wildfire</span>
+          <span class="small">Est. time: 12–20 min</span>
+          <span class="small">Target: Students age 12+</span>
+        </div>
+      </div>
+
+      <div class="cta-row" role="navigation" aria-label="Module actions">
+        <a class="btn btn-ghost" href="{% url 'learn' %}">⬅ Back to Modules</a>
+        <a class="btn btn-primary" href="#quiz">Take Quiz →</a>
+      </div>
+    </div>
+
+    <div class="grid" role="region" aria-labelledby="hookTitle">
+      <!-- MAIN COLUMN -->
+      <div>
+        <div id="google_translate_element" class="translator"></div>
+
+        <!-- HOOK -->
+        <section class="section" id="hook" aria-labelledby="hookTitle">
+          <h2 id="hookTitle">Hook — imagine dry hills and strong winds</h2>
+          <p>You're at home near a forested area and see smoke on a windy afternoon. Within minutes the sky darkens from ash. What should you and your family do first?</p>
+        </section>
+
+        <!-- WHAT IS WILDFIRE -->
+        <section class="section" aria-labelledby="whatIs">
+          <h2 id="whatIs">1. What is a Wildfire?</h2>
+          <p>Wildfire is an uncontrolled fire spreading across vegetation (grass, brush, trees). It moves quickly when conditions are dry, hot, and windy.</p>
+          <ul>
+            <li><strong>Fuels:</strong> dry grass, leaf litter, shrubs, fallen branches</li>
+            <li><strong>Weather:</strong> high heat, low humidity, strong winds accelerate spread</li>
+            <li><strong>Terrain:</strong> fires spread uphill faster; can jump across valleys</li>
+          </ul>
+        </section>
+
+        <!-- CAUSES -->
+        <section class="section" aria-labelledby="causes">
+          <h2 id="causes">2. Common Causes of Wildfire</h2>
+          <ul>
+            <li>Human activity: unattended campfires, discarded cigarettes, sparks from machinery</li>
+            <li>Powerline faults and electrical equipment</li>
+            <li>Burning debris on windy days</li>
+            <li>Deliberate arson</li>
+            <li>Lightning strikes in dry seasons</li>
+          </ul>
+        </section>
+
+        <!-- REDUCE RISK -->
+        <section class="section" aria-labelledby="prevention">
+          <h2 id="prevention">3. How to Reduce Risk (At Home & School)</h2>
+          <ul>
+            <li>Create a 10–30 metre defensible space by removing dry vegetation near buildings.</li>
+            <li>Store firewood and flammable materials >10 m from structures.</li>
+            <li>Clear gutters, roofs, and verandas of leaves and debris.</li>
+            <li>Use spark arrestors on chimneys and exhausts; maintain machinery to prevent sparks.</li>
+            <li>Follow local burn bans; do not burn waste during high-risk days.</li>
+            <li>Install smoke alarms and keep emergency kit ready (see checklist).</li>
+          </ul>
+          <div class="info-box" role="note" aria-live="polite">
+            Tip: Know your local wildfire alert levels and sign up for official SMS/phone alerts.
+          </div>
+        </section>
+
+        <!-- EVACUATE VS SHELTER -->
+        <section class="section" aria-labelledby="evac">
+          <h2 id="evac">4. Evacuate or Shelter-in-Place — Decision Guide</h2>
+          <p class="muted">Official instructions come from local authorities. If told to evacuate, leave immediately. If told to shelter, follow these steps.</p>
+
+          <h3>If you are ordered to evacuate</h3>
+          <ol>
+            <li>Take your emergency kit, important documents, water, and masks (N95 if available).</li>
+            <li>Wear long sleeves, long pants, sturdy shoes; cover face with a damp cloth or mask.</li>
+            <li>Close all windows and doors, but do not lock them; turn off gas and electricity if time permits.</li>
+            <li>Follow designated evacuation routes — avoid driving through heavy smoke.</li>
+            <li>Keep radio/phone on and check-in at the assembly point.</li>
+          </ol>
+
+          <h3>If you are instructed to shelter (stay inside)</h3>
+          <ol>
+            <li>Close windows, vents, and doors; seal gaps with wet towels if smoke is heavy.</li>
+            <li>Move to an interior room without windows or to a room with the fewest openings.</li>
+            <li>Turn off air conditioning or forced ventilation if it draws smoke.</li>
+            <li>Keep pets inside and have carriers ready.</li>
+            <li>Monitor official channels for further instructions.</li>
+          </ol>
+
+          <div class="danger-box" role="alert">
+            If you feel your home is in immediate danger — do not wait: evacuate now. Fire behaviour can change rapidly.
+          </div>
+        </section>
+
+        <!-- VIDEO -->
+        <section class="section" aria-labelledby="videoTitle">
+          <h2 id="videoTitle">Watch: Wildfire Preparedness Demo</h2>
+          <div class="video-wrapper" aria-hidden="false">
+            <!-- Use your static video or embed a trusted video; keep fallback poster -->
+            <video controls preload="metadata" poster="{% static 'image/wildfire-poster.jpg' %}" playsinline>
+              <source src="{% static 'video/wildfire_safety_training.mp4' %}" type="video/mp4">
+              <!-- Fallback text -->
+              Your browser does not support embedded video. See the training playlist on your school's device.
+            </video>
+          </div>
+          <p class="small" style="margin-top:8px">Tip: Run the video at full screen with your class and pause to discuss evacuation steps.</p>
+        </section>
+
+        <!-- ACTIVITIES -->
+        <section class="section" aria-labelledby="activities">
+          <h2 id="activities">5. Activities & Drills</h2>
+          <ol>
+            <li>Evacuation drill: timed route to a safe assembly area on low wind days; record and improve timings.</li>
+            <li>Defensible space workshop: students map nearby vegetation and propose a clearing plan.</li>
+            <li>Role-play: receive an evacuation order and practice packing and leaving calmly.</li>
+            <li>Communication drill: practice contacting guardians and reporting attendance after evacuation.</li>
+          </ol>
+        </section>
+
+        <!-- EMERGENCY KIT -->
+        <section class="section" aria-labelledby="kit">
+          <h2 id="kit">6. Emergency Kit (Wildfire)</h2>
+          <p class="muted">Keep these items in an easy-to-grab bag for every household and classroom:</p>
+          <div class="kit-list" role="list" aria-label="Wildfire emergency kit items">
+            <div class="kit-item" role="listitem">N95 mask / cloth</div>
+            <div class="kit-item" role="listitem">Water (1–2 litres per person)</div>
+            <div class="kit-item" role="listitem">First-aid</div>
+            <div class="kit-item" role="listitem">Flashlight & batteries</div>
+            <div class="kit-item" role="listitem">Emergency contact list</div>
+            <div class="kit-item" role="listitem">Important documents (copies)</div>
+            <div class="kit-item" role="listitem">Basic tools / whistle</div>
+          </div>
+        </section>
+
+        <!-- POSTERS -->
+        <section class="section" aria-labelledby="posters">
+          <h2 id="posters">7. Posters & Classroom Materials</h2>
+          <p class="muted">Download and display these near exits and notice boards.</p>
+          <img class="poster" src="{% static 'image/wildfire_poster1.jpg' %}" alt="Wildfire safety poster: Evacuation steps">
+          <img class="poster" src="{% static 'image/wildfire_defensible_space.jpg' %}" alt="Defensible space poster">
+        </section>
+
+        <!-- QUIZ -->
+        <section class="section quiz-box" id="quiz" aria-labelledby="quizHeader">
+          <h2 id="quizHeader">Quiz — Test Your Wildfire Knowledge</h2>
+          <form id="quizForm" aria-describedby="quizHelp">
+            <div id="quizHelp" class="small" style="margin-bottom:8px">Choose the best answer and press Submit. Progress is saved locally.</div>
+
+            <div class="quiz-question" role="group" aria-labelledby="q1label">
+              <p id="q1label"><strong>1.</strong> Which condition greatly increases wildfire spread?</p>
+              <div class="quiz-options">
+                <label><input type="radio" name="q1" value="A"> High humidity and calm winds</label>
+                <label><input type="radio" name="q1" value="B"> Dry vegetation and strong winds</label>
+              </div>
+            </div>
+
+            <div class="quiz-question" role="group" aria-labelledby="q2label">
+              <p id="q2label"><strong>2.</strong> If authorities order evacuation, you should:</p>
+              <div class="quiz-options">
+                <label><input type="radio" name="q2" value="A"> Wait until ash falls</label>
+                <label><input type="radio" name="q2" value="B"> Leave immediately with your emergency kit</label>
+              </div>
+            </div>
+
+            <div class="quiz-question" role="group" aria-labelledby="q3label">
+              <p id="q3label"><strong>3.</strong> When sheltering inside during smoke, you should:</p>
+              <div class="quiz-options">
+                <label><input type="radio" name="q3" value="A"> Open windows to let smoke out</label>
+                <label><input type="radio" name="q3" value="B"> Close windows, vents and turn off ventilation</label>
+              </div>
+            </div>
+
+            <div class="quiz-question" role="group" aria-labelledby="q4label">
+              <p id="q4label"><strong>4.</strong> Which of these reduces the chance of structure ignition?</p>
+              <div class="quiz-options">
+                <label><input type="radio" name="q4" value="A"> Store dry leaves next to the house</label>
+                <label><input type="radio" name="q4" value="B"> Create defensible space and remove debris</label>
+              </div>
+            </div>
+
+            <div class="quiz-question" role="group" aria-labelledby="q5label">
+              <p id="q5label"><strong>5.</strong> Emergency numbers to save (India):</p>
+              <div class="quiz-options">
+                <label><input type="radio" name="q5" value="A"> 101 or 112</label>
+                <label><input type="radio" name="q5" value="B"> 9999</label>
+              </div>
+            </div>
+
+            <button type="button" class="submit-btn" id="submitQuiz">Submit Quiz</button>
+            <div id="quizResult" class="result" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+
+        <!-- NAVIGATION -->
+        <div class="section" style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+          <a class="btn btn-ghost" href="{% url 'learn' %}">⬅ Back to Modules</a>
+          <div class="small muted">Last updated: January 2026</div>
+        </div>
+      </div>
+
+      <!-- SIDE COLUMN -->
+      <aside class="sidecard" aria-labelledby="sideTitle">
+        <div class="section" id="sideTitle">
+          <h2>Quick Actions</h2>
+          <p class="small">Tools and quick references for rapid response.</p>
+          <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+            <button class="btn btn-ghost" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Take Quiz</button>
+            <a class="btn btn-primary" href="{% url 'learn' %}">All Modules</a>
+          </div>
+        </div>
+
+        <div class="section" aria-labelledby="checkTitle">
+          <h3 id="checkTitle">Wildfire Checklist</h3>
+          <ul class="small">
+            <li>Keep an emergency kit ready and accessible</li>
+            <li>Know two evacuation routes from your home and school</li>
+            <li>Practice a family evacuation plan</li>
+            <li>Keep car fuel at least half tank during fire season</li>
+          </ul>
+        </div>
+<div class="section">
+          <h3>Poster</h3>
+          <img class="poster" src="{% static 'image/wild-fire-sefty.jpg' %}" alt="wild fire poster">
+          <p class="small">Print and display this poster in classrooms and corridors.</p>
+        </div>
+
+        <div class="section" aria-labelledby="numbers">
+          <h3 id="numbers">Emergency Numbers</h3>
+          <p class="small">Contact these when you need help.</p>
+          <ul class="small">
+            <li>Fire & Rescue: <strong>101</strong></li>
+            <li>Emergency (general): <strong>112</strong></li>
+          </ul>
+        </div>
+
+        <div class="section" aria-labelledby="resources">
+          <h3 id="resources">Additional Resources</h3>
+          <p class="small">Place links to local authority pages, school emergency plans, and printable posters here.</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="note">Accessibility: images have alt text; consider adding transcripts for videos and clear voice prompts for learners who need them.</div>
+      <div class="small muted">Prepared by SafeLearn — Classroom-ready materials</div>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      // quiz answers
+      const answers = { q1: 'B', q2: 'B', q3: 'B', q4: 'B', q5: 'A' };
+
+      function grade() {
+        let correct = 0, total = 0;
+        for (let key in answers) {
+          total++;
+          const el = document.querySelector('input[name="'+key+'"]:checked');
+          const val = el ? el.value : null;
+          if (val === answers[key]) correct++;
+        }
+        return { correct, total };
+      }
+
+      function showResult() {
+        const r = grade();
+        const pct = Math.round((r.correct / r.total) * 100);
+        const el = document.getElementById('quizResult');
+        let msg = 'Score: ' + r.correct + ' / ' + r.total + ' (' + pct + '%) — ';
+        if (pct === 100) msg += 'Excellent understanding of wildfire safety.';
+        else if (pct >= 70) msg += 'Good — review missed items.';
+        else msg += 'Review the module and practice the drills again.';
+        el.textContent = msg;
+        el.style.color = pct >= 70 ? '#0b7a3c' : '#b45309';
+        // save progress to localStorage
+        try {
+          localStorage.setItem('wildfire_quiz_score', JSON.stringify({score: r, date: new Date().toISOString()}));
+        } catch (e) {
+          // ignore storage errors (e.g., private mode)
+        }
+      }
+
+      document.getElementById('submitQuiz').addEventListener('click', showResult);
+
+      // restore any previous saved score summary (optional)
+      (function restore(){
+        try {
+          const s = localStorage.getItem('wildfire_quiz_score');
+          if (!s) return;
+          const data = JSON.parse(s);
+          if (data && data.score) {
+            const r = data.score;
+            const pct = Math.round((r.correct / r.total) * 100);
+            const el = document.getElementById('quizResult');
+            el.textContent = 'Previous score: ' + r.correct + ' / ' + r.total + ' (' + pct + '%)';
+            el.style.color = pct >= 70 ? '#0b7a3c' : '#b45309';
+          }
+        } catch(e){}
+      })();
+
+      // accessibility: allow Enter key to submit when focus inside form
+      document.getElementById('quizForm').addEventListener('keydown', function(e){
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          showResult();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

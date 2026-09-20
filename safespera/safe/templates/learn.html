@@ -1,0 +1,566 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeLearn - Learning Modules</title>
+    <meta name="description" content="Browse and complete disaster preparedness learning modules">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modern-backgrounds.css' %}">
+    <script src="script.js" defer></script>
+</head>
+
+
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    {
+      pageLanguage: 'en',
+      includedLanguages: 'en,hi,ta,te,bn,gu,kn,ml,mr,pa,ur',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    },
+    'google_translate_element'
+  );
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+
+<body>
+
+      <!-- Mobile Menu Button -->
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+      </button>
+
+      <div class="site-bg" aria-hidden="true" role="presentation">
+  <!-- preload hint (optional) -->
+  <link rel="preload" href="{% static 'bg/Module_Card.mp4' %}" as="video" type="video/mp4">
+
+  <video class="site-bg-video"
+         autoplay
+         muted
+         loop
+         playsinline
+         preload="metadata"
+         poster="{% static 'bg/site-bg.png' %}"
+         aria-hidden="true"
+         tabindex="-1">
+    <source src="{% static 'bg/Module_Card.mp4' %}" type="video/mp4">
+    <!-- fallback image for very old browsers -->
+  </video>
+
+  <div class="site-bg-overlay" aria-hidden="true" role="presentation"></div>
+</div>
+   
+    <!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <span class="logo-icon">🛡️</span>
+            <span class="logo-text">SafeSphere</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            <span class="toggle-icon">☰</span>
+        </button>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="{% url 'learn' %}" class="nav-link {% if request.resolver_match.url_name == 'learn' %}active{% endif %}">
+            <span class="nav-icon">📚</span>
+            <span class="nav-text">Learn</span>
+        </a>
+             <a href="{% url 'protect' %}" class="nav-link {% if request.resolver_match.url_name == 'protect' %}active{% endif %}">
+            <span class="nav-icon">🏡</span>
+            <span class="nav-text">Protect Home, Farm & Livelihood</span>
+        </a>
+        
+        <a href="{% url 'games' %}" class="nav-link {% if request.resolver_match.url_name == 'games' %}active{% endif %}">
+            <span class="nav-icon">🎮</span>
+            <span class="nav-text">Games</span>
+        </a>
+        <a href="{% url 'drills' %}" class="nav-link {% if request.resolver_match.url_name == 'drills' %}active{% endif %}">
+            <span class="nav-icon">🚨</span>
+            <span class="nav-text">Drills</span>
+        </a>
+        
+        <a href="{% url 'emergency' %}" class="nav-link emergency-link {% if request.resolver_match.url_name == 'emergency' %}active{% endif %}">
+            <span class="nav-icon">🆘</span>
+            <span class="nav-text">Emergency</span>
+        </a>
+        <a href="{% url 'chat' %}" class="nav-link {% if request.resolver_match.url_name == 'chat' %}active{% endif %}">
+            <span class="nav-icon">💬</span>
+            <span class="nav-text">AI Assistant</span>
+        </a>
+        
+        <!-- Weather page -->
+        <a href="{% url 'weather' %}" class="nav-link {% if request.resolver_match.url_name == 'weather' %}active{% endif %}">
+            <span class="nav-icon">🌦</span>
+            <span class="nav-text">Weather</span>
+        </a>
+        <!-- Map page -->
+        <a href="{% url 'map' %}" class="nav-link {% if request.resolver_match.url_name == 'map' %}active{% endif %}">
+            <span class="nav-icon">🗺️</span>
+            <span class="nav-text">Safety Map</span>
+        </a>
+        <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">Profile</span>
+        </a>
+
+
+
+    </nav>
+</aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div id="google_translate_element" class="lang-selector"></div> 
+        <header class="page-header">
+            <div class="header-content">
+                <h1 class="page-title">Learning Modules 📚</h1>
+                <p class="page-subtitle">Master disaster preparedness one module at a time</p>
+            </div>
+        </header>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs animate-fade-up">
+            <button class="filter-tab active" data-filter="all">All Modules</button>
+            <button class="filter-tab" data-filter="beginner">Beginner</button>
+            <button class="filter-tab" data-filter="intermediate">Intermediate</button>
+            <button class="filter-tab" data-filter="advanced">Advanced</button>
+        </div>
+
+        <!-- Modules Grid -->
+        <section class="section">
+            <div class="learn-modules-grid" id="modulesGrid">
+                <!-- Modules will be generated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="{% static 'js/mobile-menu.js' %}"></script>
+    <script>
+        // Module data
+        const modules = [
+            {
+                id: 'Earthquake_Safety',
+                title: 'Earthquake Safety Basics',
+                description: 'Learn essential earthquake preparedness and response techniques',
+                icon: '<img src="{% static "image/Earthquake_gif.gif" %}" class="card-icon" >',
+                difficulty: 'beginner',
+                duration: 15,
+                progress: 65,
+                xp: 100
+            },
+            {
+                id: 'fire_sefty',
+                title: 'Fire Safety',
+                description: 'Prevention and response strategies for fire emergencies',
+                icon: '<img src="{% static "image/fire-gif.gif" %}" class="card-icon" alt="Fire Animation">',
+                difficulty: 'beginner',
+                duration: 15,
+                progress: 100,
+                xp: 100
+            },
+            {
+                id: 'flood-response',
+                title: 'Flood Response',
+                description: 'Stay safe during flooding events and water emergencies',
+                icon: '<img src="{% static "image/flood-gif.gif" %}" class="card-icon" >',
+                difficulty: 'intermediate',
+                duration: 20,
+                progress: 40,
+                xp: 150
+            },
+            {
+                id: 'hurricane-prep',
+                title: 'Hurricane Preparation',
+                description: 'Before, during, and after hurricane safety protocols',
+                icon: '<img src="{% static "image/cyclone2-gif.gif" %}" class="card-icon" >',
+                difficulty: 'beginner',
+                duration: 18,
+                progress: 0,
+                xp: 120
+            },
+            {
+                id: 'first-aid',
+                title: 'Emergency First Aid',
+                description: 'Critical first aid techniques for disaster scenarios',
+                icon: '<img src="{% static "image/doctor-gif.gif" %}" class="card-icon" >',
+                difficulty: 'intermediate',
+                duration: 25,
+                progress: 20,
+                xp: 180
+            },
+            {
+                id: 'tornado-safety',
+                title: 'Tornado Safety',
+                description: 'Recognize warnings and take shelter effectively',
+                icon: '<img src="{% static "image/cyclone-gif.gif" %}" class="card-icon" >',
+                difficulty: 'beginner',
+                duration: 12,
+                progress: 0,
+                xp: 90
+            },
+            {
+                id: 'winter-storms',
+                title: 'Winter Storm Survival',
+                description: 'Navigate extreme cold and snow emergencies',
+                icon: '<img src="{% static "image/winterstrom-gif.gif" %}" class="card-icon" >',
+                difficulty: 'intermediate',
+                duration: 22,
+                progress: 0,
+                xp: 160
+            },
+            {
+                id: 'wildfire-escape',
+                title: 'Wildfire Evacuation',
+                description: 'Plan and execute safe evacuation during wildfires',
+                icon: '<img src="{% static "image/fire-gif.gif" %}" class="card-icon" alt="Fire Animation">',
+                difficulty: 'advanced',
+                duration: 30,
+                progress: 0,
+                xp: 200
+            },
+            {
+                id: 'emergency-kit',
+                title: 'Emergency Kit Essentials',
+                description: 'Build a comprehensive 72-hour emergency kit',
+                icon: '<img src="{% static "image/firstaid-kit-gif.gif" %}" class="card-icon" >',
+                difficulty: 'beginner',
+                duration: 10,
+                progress: 80,
+                xp: 80
+            },
+           
+            
+            {
+                id: 'HeatWave-safety',
+                title: 'Heat Wave Safety Planning',
+                description: 'Protect yourself and others during extreme heat events',
+                icon: '<img src="{% static "image/heatwave-gif.gif" %}" class="card-icon" >',
+                difficulty: 'beginner',
+                duration: 12,
+                progress: 0,
+                xp: 85
+            },
+
+          {
+    id: 'landslide-safety',
+    title: 'Landslide Safety Planning',
+    description: 'Protect yourself and others during landslide events',
+    icon: '<img src="{% static "image/Landslide-gif.gif" %}" class="card-icon" >',
+    difficulty: 'advanced',
+    duration: 12,
+    progress: 0,
+    xp: 85
+},
+
+{
+    id: 'thunderstorm',
+    title: 'Thunderstorm Safety',
+    description: 'Civilian safety basics during thunderstorms and related emergencies',
+    icon: '<img src="{% static "image/thenderstrom-gif.gif" %}" class="card-icon">',
+    difficulty: 'advanced',
+    duration: 25,
+    progress: 0,
+    xp: 200
+},
+
+{
+    id: 'tsunami-safety',
+    title: 'Tsunami Safety',
+    description: 'Learn how to prepare for and survive tsunami events',
+    icon: '<img src="{% static "image/tusnami-gif.gif" %}" class="card-icon">',
+    difficulty: 'advanced',
+    duration: 20,
+    progress: 0,
+    xp: 180
+},
+
+
+{
+    id: 'air-pollution',
+    title: 'AQI Emergency',
+    description: 'Understand air pollution risks and safety measures during AQI emergencies',
+    icon: '<img src="{% static "image/AQI-GIF.gif" %}" class="card-icon">',
+    difficulty: 'advanced',
+    duration: 15,
+    progress: 0,
+    xp: 150
+},
+
+{
+    id: 'war-civil-defence',
+    title: 'War & Civil Defence',
+    description: 'Civilian safety basics during war, armed conflict, and missile strikes',
+    icon: '<img src="{% static "image/war-gif.gif" %}" class="card-icon">',
+    difficulty: 'advanced',
+    duration: 25,
+    progress: 0,
+    xp: 200
+},
+
+{
+  id: 'nuclear-safety',
+  title: 'Nuclear Safety',
+  description: 'Calm, practical actions to reduce exposure and protect families during nuclear incidents.',
+  icon: '<img src="{% static "image/learn/nuclear/icon_nuclear.png" %}" class="card-icon" alt="nuclear icon">',
+  difficulty: 'advanced',
+  duration: 30,
+  progress: 0,
+  xp: 400,
+ 
+},
+
+ {
+   id: 'communication',
+    title: 'Emergency Communication',
+    description: 'Maintain contact during infrastructure failures',
+    icon: '<img src="{% static "image/emmergency-comm-gif.gif" %}" class="card-icon" >',
+    difficulty: 'intermediate',
+    duration: 18,
+    progress: 0,
+    xp: 140
+    },
+
+{
+    id: 'gas-leak',
+    title: 'Gas Leak Safety',
+    description: 'Civilian safety basics during gas leaks and related emergencies',
+    icon: '<img src="{% static "image/gas-leak-gif.gif" %}" class="card-icon">',
+    difficulty: 'advanced',
+    duration: 25,
+    progress: 0,
+    xp: 200
+},
+
+
+
+
+{
+    id: 'transport_accident',
+    title: 'Major Transport Accident Safety',
+    description: 'Civilian safety basics during major transport accidents and related emergencies',
+    icon: '<img src="{% static "image/accdent-gif.gif" %}" class="card-icon">',
+    difficulty: 'advanced',
+    duration: 25,
+    progress: 0,
+    xp: 200
+},
+
+
+
+
+     
+{
+    id: 'dam_reservoir_failure',
+    title: 'Dam & Reservoir Failure Safety',
+    description: 'Civilian safety basics during dam and reservoir failures and related emergencies',
+    icon: '<img src="{% static "image/dam-gif.gif" %}" class="card-icon">',
+    difficulty: 'advanced',
+    duration: 25,
+    progress: 0,
+    xp: 200
+},
+
+
+
+
+        ];
+
+        // Load module progress from localStorage
+        function loadModuleProgress() {
+            const savedProgress = localStorage.getItem('moduleProgress');
+            if (savedProgress) {
+                const progressData = JSON.parse(savedProgress);
+                modules.forEach(module => {
+                    if (progressData[module.id] !== undefined) {
+                        module.progress = progressData[module.id];
+                    }
+                });
+            }
+        }
+
+        // Save module progress
+        function saveModuleProgress(moduleId, progress) {
+            const savedProgress = localStorage.getItem('moduleProgress');
+            const progressData = savedProgress ? JSON.parse(savedProgress) : {};
+            progressData[moduleId] = progress;
+            localStorage.setItem('moduleProgress', JSON.stringify(progressData));
+        }
+
+        // Render modules
+        function renderModules(filter = 'all') {
+            loadModuleProgress();
+            const grid = document.getElementById('modulesGrid');
+            const filteredModules = filter === 'all' 
+                ? modules 
+                : modules.filter(m => m.difficulty === filter);
+
+            grid.innerHTML = filteredModules.map(module => `
+                <div class="learn-module-card animate-fade-up" data-difficulty="${module.difficulty}">
+                    <div class="module-header">
+                        <span class="module-icon">${module.icon}</span>
+                        <span class="module-tag tag-${module.difficulty}">${module.difficulty}</span>
+                    </div>
+                    <h3 class="module-title">${module.title}</h3>
+                    <p class="module-description">${module.description}</p>
+                    <div class="module-meta">
+                        <span class="meta-item">⏱️ ${module.duration} min</span>
+                        <span class="meta-item">⭐ ${module.xp} XP</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${module.progress}%"></div>
+                    </div>
+                    <p class="progress-text">${module.progress}% complete</p>
+
+
+ <button class="btn btn-primary" onclick="openModule('${module.id}')">
+    Play Now →
+</button>
+
+
+                </div>
+            `).join('');
+        }
+
+
+
+      function openModule(moduleId) {
+
+    if (moduleId === 'fire_sefty') {
+        window.location.href = "{% url 'fire_sefty_modules' %}";
+    }
+
+    else if (moduleId === 'flood-response') {
+        window.location.href = "{% url 'flood' %}";
+    }
+    
+    else if (moduleId === 'Earthquake_Safety') {
+        window.location.href = "{% url 'Earthquake_Safety' %}";
+    }
+
+    else if (moduleId === 'wildfire-escape') {
+        window.location.href = "{% url 'FireSafety' %}";
+    }
+    
+    
+    else if (moduleId === 'hurricane-prep') {
+        window.location.href = "{% url 'Cyclone_Safety' %}";
+    }
+
+    else if (moduleId === 'first-aid') {
+        window.location.href = "{% url 'Firstaid' %}";
+    }
+     
+    else if (moduleId === 'communication') {
+       window.location.href = "{% url 'emergency_com' %}";
+
+    }
+    else if (moduleId === 'winter-storms'){
+        window.location.href = "{% url 'WinterStorms_Safety' %}";
+    }
+    else if (moduleId === 'HeatWave-safety'){
+        window.location.href = "{% url 'HeatWave_Safety' %}";
+    }
+    else if (moduleId === 'tornado-safety'){
+        window.location.href = "{% url 'Tornado_Safety' %}";
+    }
+
+   else if (moduleId === 'landslide-safety') {
+    window.location.href = "{% url 'landslide' %}";
+}
+
+else if (moduleId === 'tsunami-safety') {
+    window.location.href = "{% url 'tsunami' %}";
+}
+
+
+else if (moduleId === 'air-pollution') {
+    window.location.href = "{% url 'air_pollution' %}";
+}
+
+
+else if (moduleId === 'war-civil-defence') {
+   window.location.href = "{% url 'war_civil_defence' %}";
+
+}
+
+else if (moduleId === 'gas-leak') {
+    window.location.href = "{% url 'gas_leak' %}";
+}
+
+else if (moduleId === 'transport_accident') {
+    window.location.href = "{% url 'major_transport_accident' %}";
+}
+
+
+else if (moduleId === 'thunderstorm') {
+    window.location.href = "{% url 'thunderstorm' %}";
+}
+
+else if (moduleId === 'dam_reservoir_failure') {
+    window.location.href = "{% url 'dam_reservoir_failure' %}";
+}
+
+else if (moduleId === 'nuclear-safety') {
+    window.location.href = "{% url 'learn_nuclear' %}";
+
+}
+
+      }
+        // Start or continue module
+        function startModule(moduleId, currentProgress) {
+            const module = modules.find(m => m.id === moduleId);
+            if (!module) return;
+
+            // Simulate progress increase
+            const newProgress = Math.min(currentProgress + 10, 100);
+            saveModuleProgress(moduleId, newProgress);
+            
+            // Update XP
+            if (newProgress > currentProgress) {
+                const currentXP = parseInt(localStorage.getItem('totalXP') || '2450');
+                localStorage.setItem('totalXP', currentXP + 10);
+            }
+
+            // Show feedback
+            alert(`📚 ${module.title}\n\nProgress: ${newProgress}%\n${newProgress === 100 ? '🎉 Module completed! +' + module.xp + ' XP' : '+10 XP earned!'}`);
+            
+            renderModules();
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderModules(tab.dataset.filter);
+            });
+        });
+
+        // Initial render
+        renderModules();
+    </script>
+
+    <!-- Include floating chat button -->
+    {% include 'partials/floating_chat_button.html' %}
+</body>
+</html>
