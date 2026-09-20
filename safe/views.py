@@ -93,33 +93,50 @@ def tsunami_safety(request):
 
 def signup_view(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
         password = request.POST.get('password')
-        
-        # 1. Manually check if username exists
-        if User.objects.filter(username=username).exists():
+        confirm_password = request.POST.get('confirm_password')
+
+        def signup_fail(message):
             return render(request, 'login.html', {
-                'signup_error': 'Username already taken', 
-                'is_signup': True
+                'signup_error': message,
+                'is_signup': True,
+                'signup_username': username,
+                'signup_email': email,
             })
-        
+
+        if not username or not email or not password:
+            return signup_fail('Please fill in all fields.')
+
+        if password != confirm_password:
+            return signup_fail('Passwords do not match.')
+
+        if len(password) < 8:
+            return signup_fail('Password must be at least 8 characters.')
+
+        # 1. Manually check if username exists
+        if User.objects.filter(username__iexact=username).exists():
+            return signup_fail('Username already taken.')
+
+        # 2. Block duplicate accounts on the same email so password reset
+        #    (which looks users up by email) stays unambiguous.
+        if User.objects.filter(email__iexact=email).exists():
+            return signup_fail('An account with this email already exists. Try signing in or resetting your password instead.')
+
         try:
-            # 2. Create user
+            # 3. Create user
             user = User.objects.create_user(
                 username=username,
                 email=email,
                 password=password
             )
-            # 3. Login and redirect
+            # 4. Login and redirect
             login(request, user)
             return redirect('index')
         except IntegrityError:
-            return render(request, 'login.html', {
-                'signup_error': 'Database error. Try a different username.',
-                'is_signup': True
-            })
-    
+            return signup_fail('Database error. Try a different username.')
+
     # Agar GET request hai (pehli baar page khula), toh signup side dikhao
     return render(request, 'login.html', {'is_signup': False})
 
@@ -128,8 +145,22 @@ def signup_view(request):
 
 def login_view(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        identifier = request.POST.get('username', '').strip()
+        password = request.POST.get('password')
+
+        # Allow signing in with either username or email. Emails aren't
+        # guaranteed unique, so if more than one account shares it we can't
+        # tell which one was meant - ask the user to use their username instead.
+        username = identifier
+        if '@' in identifier:
+            matches = User.objects.filter(email__iexact=identifier)
+            if matches.count() == 1:
+                username = matches.first().username
+            elif matches.count() > 1:
+                return render(request, 'login.html', {
+                    'error': 'Multiple accounts use this email. Please sign in with your username instead.',
+                    'is_signup': False,
+                })
 
         user = authenticate(
             request,
@@ -141,7 +172,7 @@ def login_view(request):
             login(request, user)
             return redirect('index')
         else:
-            return render(request, 'login.html', {'error': 'Invalid credentials' , 'is_signup': False})
+            return render(request, 'login.html', {'error': 'Invalid credentials', 'is_signup': False})
 
     return render(request, 'login.html')
 
@@ -155,18 +186,6 @@ def logout_view(request):
     return redirect('landing')
 
 
-def password_reset_request(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        new_password = request.POST.get('new_password')
-        try:
-            user = User.objects.get(username=username)
-            user.set_password(new_password)
-            user.save()
-            return redirect('login')
-        except User.DoesNotExist:
-            return render(request, 'password_reset.html', {'error': 'User not found'})
-    return render(request, 'password_reset.html')
 def weather(request):
     return render(request, "weather.html")
 
