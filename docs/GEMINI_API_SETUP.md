@@ -27,7 +27,7 @@ To prevent your key from being abused again:
 
 ### Step 1: Update Your .env File
 
-Open `safespera-old/safespera/.env` and replace the placeholder with your new key(s):
+Open `.env` and replace the placeholder with your new key(s):
 
 ```env
 # Gemini AI API Keys (comma-separated for rotation)

@@ -17,7 +17,7 @@ April 19, 2026
 - Main content adjusts padding for mobile menu button
 
 ### 2. JavaScript (`mobile-menu.js`)
-Created new file: `safespera-old/safespera/public/static/js/mobile-menu.js`
+Created new file: `public/static/js/mobile-menu.js`
 
 Features:
 - Toggle menu on hamburger button click
@@ -123,19 +123,19 @@ Added mobile menu button and script to all dashboard templates:
 - Consider adding menu close button inside sidebar for better UX
 
 ## Files Modified
-1. `safespera-old/safespera/public/static/css/responsive.css` - Mobile menu styles
-2. `safespera-old/safespera/public/static/js/mobile-menu.js` - NEW FILE
-3. `safespera-old/safespera/safe/templates/index.html`
-4. `safespera-old/safespera/safe/templates/learn.html`
-5. `safespera-old/safespera/safe/templates/chat.html`
-6. `safespera-old/safespera/safe/templates/weather.html`
-7. `safespera-old/safespera/safe/templates/map.html`
-8. `safespera-old/safespera/safe/templates/emergency.html`
-9. `safespera-old/safespera/safe/templates/games.html`
-10. `safespera-old/safespera/safe/templates/drills.html`
-11. `safespera-old/safespera/safe/templates/profile.html`
-12. `safespera-old/safespera/safe/templates/leaderboard.html`
-13. `safespera-old/safespera/safe/templates/protect/index.html`
+1. `public/static/css/responsive.css` - Mobile menu styles
+2. `public/static/js/mobile-menu.js` - NEW FILE
+3. `safe/templates/index.html`
+4. `safe/templates/learn.html`
+5. `safe/templates/chat.html`
+6. `safe/templates/weather.html`
+7. `safe/templates/map.html`
+8. `safe/templates/emergency.html`
+9. `safe/templates/games.html`
+10. `safe/templates/drills.html`
+11. `safe/templates/profile.html`
+12. `safe/templates/leaderboard.html`
+13. `safe/templates/protect/index.html`
 
 ## How to Test
 1. Start the Django development server: `python manage.py runserver`

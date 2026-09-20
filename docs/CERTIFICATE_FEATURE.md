@@ -59,8 +59,8 @@ The system comes with 3 sample certificates:
 - **Page**: Profile page (`/profile/`)
 - **Section**: Between "Your Stats" and "Achievements & Badges"
 - **Files Modified**:
-  - `safespera-old/safespera/safe/templates/profile.html`
-  - `safespera-old/safespera/public/static/css/styles.css`
+  - `safe/templates/profile.html`
+  - `public/static/css/styles.css`
 
 ## Technical Details
 

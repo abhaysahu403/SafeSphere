@@ -5,9 +5,9 @@
 [![Django](https://img.shields.io/badge/Django-5.2-green.svg)](https://www.djangoproject.com/)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Educational-orange.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-success.svg)](https://github.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-online-success.svg)](https://safesphere-kcas.onrender.com/)
 
-**🎯 Currently serving 1,500+ students across 10+ schools in Madhya Pradesh, India**
+**🔗 Live Demo: [safesphere-kcas.onrender.com](https://safesphere-kcas.onrender.com/)**
 
 ---
 
@@ -33,8 +33,6 @@ SafeSphere is a comprehensive disaster preparedness platform that combines educa
 To make disaster preparedness accessible, engaging, and effective for every Indian community through technology-driven education.
 
 ### 📊 Impact
-- **1,500+ students** trained in disaster response
-- **10+ schools** actively using the platform
 - **22+ disaster types** covered comprehensively
 - **11+ languages** supported for accessibility
 
@@ -162,8 +160,8 @@ start.bat
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/safesphere.git
-cd safesphere
+git clone https://github.com/abhaysahu403/SafeSphere.git
+cd SafeSphere
 
 # 2. Create virtual environment
 python -m venv venv
@@ -326,7 +324,7 @@ safesphere/
 ### 1. AI Assistant (Gemini 2.5 Flash)
 **File**: `docs/CERTIFICATE_FEATURE.md` (Section: AI Integration)
 
-- Location-aware responses (Sage University, Bhopal)
+- Location-aware responses based on the user's GPS coordinates
 - Real-time heatwave alerts (43-45°C)
 - Multi-language support (English, Hindi, Hinglish)
 - Voice input and text-to-speech
@@ -337,7 +335,7 @@ safesphere/
 ```javascript
 // AI responds to location queries
 User: "Where am I?"
-AI: "You are at Sage University, Bhopal, Madhya Pradesh, India."
+AI: "You are near [detected location], Madhya Pradesh, India."
 
 User: "What's the temperature?"
 AI: "Current temperature: 43-45°C (extremely hot). HEATWAVE ALERT..."
@@ -380,7 +378,7 @@ AI: "Current temperature: 43-45°C (extremely hot). HEATWAVE ALERT..."
 - Verification URL
 
 ### 4. Protect Home, Farm & Livelihood
-**File**: `safespera-old/safespera/safe/templates/protect/index.html`
+**File**: `safe/templates/protect/index.html`
 
 - Role-based guidance (Farmers, Households, Communities, Schools)
 - Regional customization (5 regions)
@@ -548,7 +546,7 @@ We welcome contributions! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidel
 ## 📞 Support & Contact
 
 - **Email**: support@safesphere.in
-- **GitHub Issues**: [Report a bug](https://github.com/yourusername/safesphere/issues)
+- **GitHub Issues**: [Report a bug](https://github.com/abhaysahu403/SafeSphere/issues)
 - **Documentation**: [Full Docs](https://docs.safesphere.in)
 
 ---
@@ -561,7 +559,6 @@ This project is licensed for educational and disaster preparedness purposes.
 
 ## 🙏 Acknowledgments
 
-- **Sage University, Bhopal** - For hosting and support
 - **Google Gemini** - AI assistance
 - **OpenStreetMap** - Map tiles
 - **Django Community** - Framework support
@@ -601,8 +598,6 @@ This project is licensed for educational and disaster preparedness purposes.
 - **Static Files**: 200+
 - **Disaster Modules**: 22+
 - **Languages Supported**: 11+
-- **Active Users**: 1,500+
-- **Schools**: 10+
 
 ---
 

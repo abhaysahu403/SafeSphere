@@ -9,7 +9,7 @@
 
 ### Step 1: Clone and Navigate
 ```bash
-cd safespera-old/safespera
+cd safesphere
 ```
 
 ### Step 2: Create Virtual Environment

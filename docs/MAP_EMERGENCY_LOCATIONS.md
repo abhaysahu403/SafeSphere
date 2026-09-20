@@ -213,5 +213,5 @@ The system uses:
 7. Verify Google Maps opens with route
 
 ## Files Modified
-- `safespera-old/safespera/public/static/js/map.js` - Added emergency locations data and functions
-- `safespera-old/safespera/safe/templates/map.html` - Added toggle buttons and updated info panel
+- `public/static/js/map.js` - Added emergency locations data and functions
+- `safe/templates/map.html` - Added toggle buttons and updated info panel
